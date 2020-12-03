@@ -1,6 +1,6 @@
 function isPrimitive(val) {
-    const type = typeof val;
-    return type === 'string' || type === 'number' || type === 'boolean';
+  const type = typeof val
+  return type === 'string' || type === 'number' || type === 'boolean'
 }
 
 /**
@@ -18,23 +18,23 @@ function isPrimitive(val) {
  * keys affected.
  */
 export function flattenObject(nestedObject) {
-    const flattened = {};
+  const flattened = {}
 
-    for (const key in nestedObject) {
-        const val = nestedObject[key];
-        if (isPrimitive(val)) {
-            flattened[key] = val;
-        } else {
-            // We assume it is a plain JS object, and not an array
-            // or something complex like a Date
-            const flatNestedObject = flattenObject(val);
-            for (const nestedKey in flatNestedObject) {
-                flattened[`${key}.${nestedKey}`] = flatNestedObject[nestedKey];
-            }
-        }
+  for (const key in nestedObject) {
+    const val = nestedObject[key]
+    if (isPrimitive(val)) {
+      flattened[key] = val
+    } else {
+      // We assume it is a plain JS object, and not an array
+      // or something complex like a Date
+      const flatNestedObject = flattenObject(val)
+      for (const nestedKey in flatNestedObject) {
+        flattened[`${key}.${nestedKey}`] = flatNestedObject[nestedKey]
+      }
     }
+  }
 
-    return flattened;
+  return flattened
 }
 
 /**
@@ -47,27 +47,27 @@ export function flattenObject(nestedObject) {
  * e.g. `{'foo.bar': 'baz'}` will become `{foo: {bar: 'baz'}}`
  */
 export function nestObject(nestedKeyNotationObject) {
-    const nested = {};
+  const nested = {}
 
-    for (const nestedKey in nestedKeyNotationObject) {
-        const keySections = nestedKey.split('.');
-        let level = nested;
+  for (const nestedKey in nestedKeyNotationObject) {
+    const keySections = nestedKey.split('.')
+    let level = nested
 
-        for (let i = 0; i < keySections.length; ++i) {
-            const keySection = keySections[i];
-            const isLastKeySection = i === keySections.length - 1;
+    for (let i = 0; i < keySections.length; ++i) {
+      const keySection = keySections[i]
+      const isLastKeySection = i === keySections.length - 1
 
-            if (isLastKeySection) {
-                // This is the final nested object, set the value
-                level[keySection] = nestedKeyNotationObject[nestedKey];
-            } else {
-                // There is more nesting to be done, move to the
-                // next level
-                if (!level[keySection]) level[keySection] = {};
-                level = level[keySection];
-            }
-        }
+      if (isLastKeySection) {
+        // This is the final nested object, set the value
+        level[keySection] = nestedKeyNotationObject[nestedKey]
+      } else {
+        // There is more nesting to be done, move to the
+        // next level
+        if (!level[keySection]) level[keySection] = {}
+        level = level[keySection]
+      }
     }
+  }
 
-    return nested;
+  return nested
 }
